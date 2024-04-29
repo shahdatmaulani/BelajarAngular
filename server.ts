@@ -16,6 +16,7 @@ export function app(): express.Express {
 
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
+  server.use(express.json())
 
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
@@ -24,9 +25,27 @@ export function app(): express.Express {
     maxAge: '1y'
   }));
 
+  const User = [{
+    id: 1,
+    email:'shahdatmaulani@gmail.com',
+    password:'12345'
+  }]
+
+  server.post('/api/user', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    if(email === User[0].email && password === User[0].password){
+      res.send(true)
+    } else {
+      res.send(false)
+    }
+  })
+
+
   // All regular routes use the Angular engine
   server.get('*', (req, res, next) => {
     const { protocol, originalUrl, baseUrl, headers } = req;
+    
 
     commonEngine
       .render({
